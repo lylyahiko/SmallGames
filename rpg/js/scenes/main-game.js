@@ -24,9 +24,12 @@ class MainGame extends Phaser.Scene {
     // Create all the assets for this scene as well as add functionality
     create() {
         // Create the player, place in dead center
-        this.player = this.add.sprite(config.width / 2, config.height / 2, 'ship');
+        this.player = this.physics.add.sprite(config.width / 2, config.height / 2, 'ship');
         // Double the size of the sprite since it's super tiny
         this.player.setScale(2);
+
+        // Prevent player from leaving bounds of screen
+        this.player.setCollideWorldBounds(true);
 
         // Create the animation for the ship idling
         this.anims.create({
@@ -47,5 +50,42 @@ class MainGame extends Phaser.Scene {
             repeat: 0,
             hideOnComplete: true
         });
+
+        // Lets allow this guy to move around
+        this.cursorKeys = this.input.keyboard.createCursorKeys();
+    }
+
+    // Update function to execute stuff as the game happens
+    update() {
+        this.movePlayerManager();
+    }
+
+
+    // Simplified movement manager with a crap ton of if conditions. This will need to be fixed in the future
+    movePlayerManager() {
+        if (this.cursorKeys.up.isDown && this.cursorKeys.right.isDown) { // If Up AND Right
+            this.player.setVelocityY(-gameSettings.playerSpeed);
+            this.player.setVelocityX(gameSettings.playerSpeed);
+        } else if (this.cursorKeys.down.isDown && this.cursorKeys.right.isDown) { // If Down AND Right
+            this.player.setVelocityY(gameSettings.playerSpeed);
+            this.player.setVelocityX(gameSettings.playerSpeed);
+        } else if (this.cursorKeys.down.isDown && this.cursorKeys.left.isDown) { // If Down AND Left
+            this.player.setVelocityY(gameSettings.playerSpeed);
+            this.player.setVelocityX(-gameSettings.playerSpeed);
+        } else if (this.cursorKeys.up.isDown && this.cursorKeys.left.isDown) { // If Up AND Left
+            this.player.setVelocityY(-gameSettings.playerSpeed);
+            this.player.setVelocityX(-gameSettings.playerSpeed);
+        } else if (this.cursorKeys.left.isDown) { // If Left
+            this.player.setVelocityX(-gameSettings.playerSpeed);
+        } else if (this.cursorKeys.right.isDown) { // If Right
+            this.player.setVelocityX(gameSettings.playerSpeed);
+        } else if (this.cursorKeys.up.isDown) { // If Up
+            this.player.setVelocityY(-gameSettings.playerSpeed);
+        } else if (this.cursorKeys.down.isDown) { // If Down
+            this.player.setVelocityY(gameSettings.playerSpeed);
+        } else { // Otherwise stop player
+            this.player.setVelocityX(0);
+            this.player.setVelocityY(0);
+        }
     }
 }

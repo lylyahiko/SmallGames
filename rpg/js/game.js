@@ -1,3 +1,7 @@
+let gameSettings = {
+    playerSpeed: 200,
+};
+
 let config = {
     type: Phaser.AUTO,
     width: 800,
@@ -5,7 +9,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: {y: 200}
+            gravity: {y: 0}
         }
     },
     scene: [ Title, MainGame ]
